@@ -79,7 +79,7 @@ const createOrder = async function (req, res) {
       });
     }
 
-    data["totalPrice"] = data.noOfTickets * 100;
+    data["totalPrice"] = data.noOfTickets * 1999;
     const createOrder = await orderModel.create(data);
 
     // Email configuration details
