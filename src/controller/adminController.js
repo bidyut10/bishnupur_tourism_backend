@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 const adminModel = require("../model/admin");
 const orderModel = require("../model/order");
 
@@ -51,12 +50,6 @@ const createAdmin = async function (req, res) {
       });
     }
 
-    //decrypted password create using "bcrypt package"
-    const saltRounds = 10;
-    const encryptedPassword = await bcrypt.hash(data.password, saltRounds);
-    data["password"] = encryptedPassword;
-
-    let saveData = await adminModel.create(data);
     {
       res
         .status(201)
@@ -107,7 +100,7 @@ const loginAdmin = async function (req, res) {
         message: "Incorrect password",
       });
     }
-    let user = await adminModel.findOne({ email: email });
+    let user = await adminModel.findOne({ email: email, password: password });
     if (!user) {
       return res.status(401).send({
         status: false,
@@ -115,13 +108,6 @@ const loginAdmin = async function (req, res) {
       });
     }
 
-    const decrypPassword = user.password;
-    const pass = await bcrypt.compare(password, decrypPassword);
-    if (!pass) {
-      return res
-        .status(400)
-        .send({ status: false, message: "Password Incorrect" });
-    }
 
     const scrtCode = "5^8LydB!mso^o!Yx";
     const projectdetails = "bishnupur=tourism@backend-apis";
